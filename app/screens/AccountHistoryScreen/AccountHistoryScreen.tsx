@@ -47,7 +47,7 @@ export const AccountHistoryScreen = observer(function AccountHistoryScreen() {
         <AccountCardList
           style={$accountCardList}
           accounts={accounts}
-          activeAccount={accounts[0]}
+          activeAccount={activeAccount}
           onChangeActiveAccount={setActiveAccount}
         />
       )}
