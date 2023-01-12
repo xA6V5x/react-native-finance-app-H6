@@ -11,6 +11,7 @@ import { observer } from "mobx-react-lite"
 import React from "react"
 import { useColorScheme } from "react-native"
 import Config from "../config"
+import { AccountHistoryScreen } from "../screens"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 
 /**
@@ -26,7 +27,9 @@ import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
  *   https://reactnavigation.org/docs/typescript/#organizing-types
  */
-export type AppStackParamList = {}
+export type AppStackParamList = {
+  AccountHistory: undefined
+}
 
 /**
  * This is a list of all the route names that will exit the app if the back button
@@ -42,7 +45,11 @@ export type AppStackScreenProps<T extends keyof AppStackParamList> = StackScreen
 const Stack = createNativeStackNavigator<AppStackParamList>()
 
 const AppStack = observer(function AppStack() {
-  return null
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="AccountHistory" component={AccountHistoryScreen} />
+    </Stack.Navigator>
+  )
 })
 
 interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
