@@ -1,2 +1,2 @@
 export * from "./ErrorScreen/ErrorBoundary"
-export * from "./AccountHistoryScreen"
+export * from "./AccountHistoryScreen/AccountHistoryScreen"
