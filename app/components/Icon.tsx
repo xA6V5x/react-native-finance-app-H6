@@ -107,6 +107,13 @@ export const iconRegistry = {
   slack: require("../../assets/icons/slack.png"),
   view: require("../../assets/icons/view.png"),
   x: require("../../assets/icons/x.png"),
+  filter: require("../../assets/icons/filter.png"),
+
+  transactionAuto: require("../../assets/icons/transaction-auto.png"),
+  transactionFood: require("../../assets/icons/transaction-food.png"),
+  transactionHouse: require("../../assets/icons/transaction-house.png"),
+  transactionTransfer: require("../../assets/icons/transaction-transfer.png"),
+  transactionTravel: require("../../assets/icons/transaction-travel.png"),
 }
 
 const $imageStyle: ImageStyle = {
