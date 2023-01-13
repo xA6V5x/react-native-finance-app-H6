@@ -1,4 +1,4 @@
-import * as React from "react"
+import React, { useEffect } from "react"
 import { Pressable, StyleProp, TextStyle, View, ViewStyle, ScrollView } from "react-native"
 import { observer } from "mobx-react-lite"
 import { typography } from "../../theme"
@@ -7,6 +7,12 @@ import { $textPrimaryLight, TextThemed, ViewThemed } from "../../components"
 import { useColorSchemeStyle } from "../../theme/useColorSchemeStyle"
 import { AccountDTO } from "../../services/api"
 import { formatMoney } from "../../utils/formatMoney"
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated"
 
 export interface AccountCardProps {
   /**
@@ -35,6 +41,24 @@ export const AccountCard = observer(function AccountCard(props: AccountCardProps
     dark: [$currencyLabel],
   })
 
+  const currencyPosition = useSharedValue(0)
+  useEffect(() => {
+    const activeBalanceIndex = account.balances.indexOf(activeBalance)
+    currencyPosition.value = withTiming(activeBalanceIndex, {
+      duration: 100,
+      easing: Easing.ease,
+    })
+  }, [activeBalance])
+
+  const $currencyPositionAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        translateX:
+          currencyPosition.value * (CURRENCY_VIEW_WIDTH + CURRENCY_VIEW_MARGIN_HORIZONTAL),
+      },
+    ],
+  }))
+
   return (
     <ViewThemed style={$styles}>
       <View style={$accountSummary}>
@@ -52,10 +76,18 @@ export const AccountCard = observer(function AccountCard(props: AccountCardProps
       </View>
 
       <ScrollView style={[$accountCurrencySwitcher, $currencyList]} horizontal>
+        <Animated.View
+          style={[
+            $currency,
+            $currencyActive,
+            { position: "absolute" },
+            $currencyPositionAnimatedStyle,
+          ]}
+        />
         {account.balances.map((balance) => (
           <Pressable
             key={balance.currency.id}
-            style={[$currency, activeBalance === balance ? $currencyActive : null]}
+            style={[$currency]}
             onPress={() => setActiveBalance(balance)}
           >
             <TextThemed
@@ -123,11 +155,18 @@ const $accountBalanceLabel: TextStyle = {
 const $currencyList: ViewStyle = {
   paddingVertical: 16,
 }
+const CURRENCY_VIEW_WIDTH = 45
+const CURRENCY_VIEW_HEIGHT = 25
+const CURRENCY_VIEW_MARGIN_HORIZONTAL = 10
+
 const $currency: ViewStyle = {
   borderRadius: 8,
-  paddingHorizontal: 10,
   paddingVertical: 5,
-  marginRight: 10,
+  marginRight: CURRENCY_VIEW_MARGIN_HORIZONTAL,
+  width: CURRENCY_VIEW_WIDTH,
+  height: CURRENCY_VIEW_HEIGHT,
+  alignItems: "center",
+  justifyContent: "center",
 }
 const $currencyActive: ViewStyle = {
   backgroundColor: "#523CF8",
