@@ -5,14 +5,13 @@
  * and a "main" flow which the user will use once logged in.
  */
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
-import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { StackScreenProps } from "@react-navigation/stack"
+import { BottomTabScreenProps, createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { observer } from "mobx-react-lite"
 import React from "react"
-import { useColorScheme } from "react-native"
+import { useColorScheme, View } from "react-native"
 import Config from "../config"
-import { AccountHistoryScreen } from "../screens"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
+import { AccountHistoryNavigator } from "./AccountHistoryNavigator"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -27,8 +26,11 @@ import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
  *   https://reactnavigation.org/docs/typescript/#organizing-types
  */
-export type AppStackParamList = {
+export type AppTabParamList = {
+  Dashboard: undefined
+  Cards: undefined
   AccountHistory: undefined
+  Payments: undefined
 }
 
 /**
@@ -37,18 +39,16 @@ export type AppStackParamList = {
  */
 const exitRoutes = Config.exitRoutes
 
-export type AppStackScreenProps<T extends keyof AppStackParamList> = StackScreenProps<
-  AppStackParamList,
-  T
->
+const Tab = createBottomTabNavigator<AppTabParamList>()
 
-const Stack = createNativeStackNavigator<AppStackParamList>()
-
-const AppStack = observer(function AppStack() {
+const AppTab = observer(function AppTab() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="AccountHistory" component={AccountHistoryScreen} />
-    </Stack.Navigator>
+    <Tab.Navigator initialRouteName="AccountHistory" screenOptions={{ headerShown: false }}>
+      <Tab.Screen name="Dashboard" component={View} />
+      <Tab.Screen name="Cards" component={View} />
+      <Tab.Screen name="AccountHistory" component={AccountHistoryNavigator} />
+      <Tab.Screen name="Payments" component={View} />
+    </Tab.Navigator>
   )
 })
 
@@ -65,7 +65,7 @@ export const AppNavigator = observer(function AppNavigator(props: NavigationProp
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
       {...props}
     >
-      <AppStack />
+      <AppTab />
     </NavigationContainer>
   )
 })

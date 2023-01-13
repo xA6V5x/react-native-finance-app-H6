@@ -5,6 +5,7 @@ import { typography } from "../../theme"
 import { Text } from "../../components/Text"
 import { TransactionListItem } from "../../components/TransactionListItem"
 import { Icon } from "../../components"
+import { useAccountHistoryNavigation } from "../../navigators"
 
 export interface RecentTransactionsViewProps {
   /**
@@ -21,11 +22,14 @@ export const RecentTransactionsView = observer(function RecentTransactionsView(
 
   const transactions = [...new Array(5)].map((_, index) => ({ id: index }))
 
+  const navigation = useAccountHistoryNavigation()
+  const openTransactionList = () => navigation.navigate("TransactionList")
+
   return (
     <View style={$styles}>
       <View style={$transactionsHeader}>
         <Text style={$transactionsHeaderText}>Recent transactions</Text>
-        <TouchableOpacity style={$transactionsFilterButton}>
+        <TouchableOpacity style={$transactionsFilterButton} onPress={openTransactionList}>
           <Icon size={18} color="white" icon="filter" />
         </TouchableOpacity>
       </View>
