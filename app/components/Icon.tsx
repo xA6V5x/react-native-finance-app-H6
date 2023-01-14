@@ -114,6 +114,11 @@ export const iconRegistry = {
   transactionHouse: require("../../assets/icons/transaction-house.png"),
   transactionTransfer: require("../../assets/icons/transaction-transfer.png"),
   transactionTravel: require("../../assets/icons/transaction-travel.png"),
+
+  wallet: require("../../assets/icons/wallet.png"),
+  payments: require("../../assets/icons/payments.png"),
+  analytics: require("../../assets/icons/analytics.png"),
+  card: require("../../assets/icons/card.png"),
 }
 
 const $imageStyle: ImageStyle = {

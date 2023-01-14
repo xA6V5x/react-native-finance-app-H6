@@ -5,13 +5,14 @@
  * and a "main" flow which the user will use once logged in.
  */
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
-import { BottomTabScreenProps, createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { useColorScheme, View } from "react-native"
 import Config from "../config"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { AccountHistoryNavigator } from "./AccountHistoryNavigator"
+import { BottomNavigationBar, Icon, IconTypes } from "../components"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -29,7 +30,7 @@ import { AccountHistoryNavigator } from "./AccountHistoryNavigator"
 export type AppTabParamList = {
   Dashboard: undefined
   Cards: undefined
-  AccountHistory: undefined
+  AccountHistoryNavigator: undefined
   Payments: undefined
 }
 
@@ -42,12 +43,46 @@ const exitRoutes = Config.exitRoutes
 const Tab = createBottomTabNavigator<AppTabParamList>()
 
 const AppTab = observer(function AppTab() {
+  const renderTabBarIcon = ({ icon, focused }: { icon: IconTypes; focused: boolean }) => (
+    <Icon size={24} color={focused ? "#523CF8" : "#DCDCDC"} icon={icon} />
+  )
+
   return (
-    <Tab.Navigator initialRouteName="AccountHistory" screenOptions={{ headerShown: false }}>
-      <Tab.Screen name="Dashboard" component={View} />
-      <Tab.Screen name="Cards" component={View} />
-      <Tab.Screen name="AccountHistory" component={AccountHistoryNavigator} />
-      <Tab.Screen name="Payments" component={View} />
+    <Tab.Navigator
+      initialRouteName="AccountHistoryNavigator"
+      screenOptions={{
+        headerShown: false,
+      }}
+      tabBar={(props) => <BottomNavigationBar {...props} />}
+    >
+      <Tab.Screen
+        name="Dashboard"
+        component={View}
+        options={{
+          tabBarIcon: ({ focused }) => renderTabBarIcon({ focused, icon: "wallet" }),
+        }}
+      />
+      <Tab.Screen
+        name="Cards"
+        component={View}
+        options={{
+          tabBarIcon: ({ focused }) => renderTabBarIcon({ focused, icon: "card" }),
+        }}
+      />
+      <Tab.Screen
+        name="AccountHistoryNavigator"
+        component={AccountHistoryNavigator}
+        options={{
+          tabBarIcon: ({ focused }) => renderTabBarIcon({ focused, icon: "analytics" }),
+        }}
+      />
+      <Tab.Screen
+        name="Payments"
+        component={View}
+        options={{
+          tabBarIcon: ({ focused }) => renderTabBarIcon({ focused, icon: "payments" }),
+        }}
+      />
     </Tab.Navigator>
   )
 })
