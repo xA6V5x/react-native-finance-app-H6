@@ -2,8 +2,9 @@ import * as React from "react"
 import { Pressable, StyleProp, TextStyle, View, ViewStyle, ScrollView } from "react-native"
 import { observer } from "mobx-react-lite"
 import { typography } from "../../theme"
-import { Text } from "../../components/Text"
 import { Icon } from "../../components/Icon"
+import { $textPrimaryLight, TextThemed, ViewThemed } from "../../components"
+import { useColorSchemeStyle } from "../../theme/useColorSchemeStyle"
 
 export interface AccountCardProps {
   /**
@@ -23,12 +24,23 @@ export const AccountCard = observer(function AccountCard(props: AccountCardProps
   const currencies = ["EUR", "USD", "GBR"]
   const [activeCurrency, setActiveCurrency] = React.useState(currencies[0])
 
+  const $accountNumberStyle = useColorSchemeStyle({
+    light: [$accountNumber, $textPrimaryLight],
+    dark: $accountNumber,
+  })
+  const $currencyLabelStyle = useColorSchemeStyle({
+    light: [$currencyLabel, $textPrimaryLight],
+    dark: [$currencyLabel],
+  })
+
   return (
-    <View style={$styles}>
+    <ViewThemed style={$styles}>
       <View style={$accountSummary}>
         <View style={$accountSummaryLeft}>
-          <Text style={$accountName}>Current Account</Text>
-          <Text style={$accountNumber}>1234-4567-3456-3456</Text>
+          <TextThemed style={$accountName}>Current Account</TextThemed>
+          <TextThemed style={$accountNumberStyle} variant="secondary">
+            1234-4567-3456-3456
+          </TextThemed>
         </View>
         <View style={$accountSummaryRight}>
           <Pressable style={$accountMoreButton} onPress={() => {}}>
@@ -44,18 +56,22 @@ export const AccountCard = observer(function AccountCard(props: AccountCardProps
             style={[$currency, activeCurrency === currency ? $currencyActive : null]}
             onPress={() => setActiveCurrency(currency)}
           >
-            <Text
-              style={[$currencyLabel, activeCurrency === currency ? $currencyLabelActive : null]}
+            <TextThemed
+              variant="secondary"
+              style={[
+                $currencyLabelStyle,
+                activeCurrency === currency ? $currencyLabelActive : null,
+              ].flat()}
             >
               {currency}
-            </Text>
+            </TextThemed>
           </Pressable>
         ))}
       </ScrollView>
 
-      <Text style={$accountBalance}>76.451,00</Text>
-      <Text style={$accountBalanceLabel}>Current balance</Text>
-    </View>
+      <TextThemed style={$accountBalance}>76.451,00</TextThemed>
+      <TextThemed style={$accountBalanceLabel}>Current balance</TextThemed>
+    </ViewThemed>
   )
 })
 
@@ -63,19 +79,16 @@ const $container: ViewStyle = {
   paddingHorizontal: 15,
   paddingTop: 10,
   paddingBottom: 13,
-  backgroundColor: "white",
   borderRadius: 25,
 }
 
 const $accountName: TextStyle = {
   fontSize: 22,
   fontFamily: typography.primary.bold,
-  color: "#16110D",
 }
 const $accountNumber: TextStyle = {
   fontSize: 12,
   fontFamily: typography.primary.semiBold,
-  color: "#16110D",
 }
 const $accountSummary: ViewStyle = {
   flexDirection: "row",
@@ -99,12 +112,10 @@ const $accountBalance: TextStyle = {
   lineHeight: 41,
   fontSize: 34,
   fontFamily: typography.primary.bold,
-  color: "#16110D",
 }
 const $accountBalanceLabel: TextStyle = {
   fontSize: 15,
   fontFamily: typography.primary.normal,
-  color: "#16110D",
 }
 
 const $currencyList: ViewStyle = {
@@ -123,7 +134,6 @@ const $currencyLabel: TextStyle = {
   fontSize: 12,
   lineHeight: 15,
   fontFamily: typography.primary.semiBold,
-  color: "#16110D",
 }
 const $currencyLabelActive: TextStyle = {
   color: "white",

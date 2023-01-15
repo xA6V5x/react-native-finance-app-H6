@@ -18,6 +18,7 @@
     },
     "jsEngine": "hermes",
     "assetBundlePatterns": ["**/*"],
+    "userInterfaceStyle": "automatic",
     "android": {
       "icon": "./assets/images/app-icon-android-legacy.png",
       "package": "com.cryptoapp",
@@ -28,7 +29,7 @@
       "splash": {
         "image": "./assets/images/splash-logo-android-universal.png",
         "resizeMode": "contain",
-        "backgroundColor": "#191015"
+        "backgroundColor": "#523CF8"
       }
     },
     "ios": {
@@ -39,7 +40,7 @@
         "image": "./assets/images/splash-logo-ios-mobile.png",
         "tabletImage": "./assets/images/splash-logo-ios-tablet.png",
         "resizeMode": "contain",
-        "backgroundColor": "#191015"
+        "backgroundColor": "#523CF8"
       }
     },
     "web": {

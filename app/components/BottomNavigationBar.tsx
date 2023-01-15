@@ -3,6 +3,7 @@ import { StyleProp, TouchableOpacity, View, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs"
 import { useSafeAreaInsetsStyle } from "../utils/useSafeAreaInsetsStyle"
+import { ViewThemed } from "./ViewThemed"
 
 export interface BottomNavigationBarProps extends BottomTabBarProps {
   /**
@@ -19,7 +20,7 @@ export const BottomNavigationBar = observer(function BottomNavigationBar(
   const $styles = [$container, style, $insetsStyle]
 
   return (
-    <View style={$styles}>
+    <ViewThemed style={$styles}>
       <View style={$navbar}>
         {state.routes.map((route, index) => {
           const { options } = descriptors[route.key]
@@ -62,7 +63,7 @@ export const BottomNavigationBar = observer(function BottomNavigationBar(
           )
         })}
       </View>
-    </View>
+    </ViewThemed>
   )
 })
 
@@ -71,7 +72,6 @@ const $container: ViewStyle = {
   left: 0,
   bottom: 0,
   right: 0,
-  backgroundColor: "white",
   borderTopLeftRadius: 25,
   borderTopRightRadius: 25,
 }

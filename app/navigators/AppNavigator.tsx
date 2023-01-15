@@ -43,8 +43,12 @@ const exitRoutes = Config.exitRoutes
 const Tab = createBottomTabNavigator<AppTabParamList>()
 
 const AppTab = observer(function AppTab() {
+  const colorScheme = useColorScheme()
+  const colorActive = "#523CF8"
+  const colorInactive = colorScheme === "light" ? "#DCDCDC" : "#646464"
+
   const renderTabBarIcon = ({ icon, focused }: { icon: IconTypes; focused: boolean }) => (
-    <Icon size={24} color={focused ? "#523CF8" : "#DCDCDC"} icon={icon} />
+    <Icon size={24} color={focused ? colorActive : colorInactive} icon={icon} />
   )
 
   return (

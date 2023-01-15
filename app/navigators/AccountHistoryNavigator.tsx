@@ -6,7 +6,8 @@ import {
 import { AccountHistoryScreen, TransactionListScreen } from "../screens"
 import { useNavigation } from "@react-navigation/native"
 import { HeaderRightButton, Icon } from "../components"
-import { nativeStackNavigationOptions } from "./navigatorStyles"
+import { useNativeStackNavigationOptions } from "./useNativeStackNavigationOptions"
+import { useColorScheme } from "react-native"
 
 type AccountHistoryNavigatorParamList = {
   AccountHistory: undefined
@@ -18,6 +19,8 @@ type AccountHistoryNavigation = NativeStackNavigationProp<AccountHistoryNavigato
 const Stack = createNativeStackNavigator<AccountHistoryNavigatorParamList>()
 
 export const AccountHistoryNavigator = () => {
+  const nativeStackNavigationOptions = useNativeStackNavigationOptions()
+
   return (
     <Stack.Navigator screenOptions={nativeStackNavigationOptions}>
       <Stack.Screen

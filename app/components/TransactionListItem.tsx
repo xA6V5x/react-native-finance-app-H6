@@ -4,6 +4,7 @@ import { observer } from "mobx-react-lite"
 import { typography } from "../theme"
 import { Text } from "./Text"
 import { Icon } from "./Icon"
+import { TextThemed } from "./TextThemed"
 
 export interface TransactionListItemProps {
   /**
@@ -24,14 +25,18 @@ export const TransactionListItem = observer(function TransactionListItem(
         <Icon icon="transactionAuto" size={18} color="white" />
       </View>
       <View style={$transactionSummary}>
-        <Text style={$transactionTitle} numberOfLines={1}>
+        <TextThemed style={$transactionTitle} numberOfLines={1}>
           "Golub" Taxi Transportation
-        </Text>
-        <Text style={$transactionDateTime}>20th May, 18:39</Text>
+        </TextThemed>
+        <TextThemed style={$transactionDateTime} variant="secondary">
+          20th May, 18:39
+        </TextThemed>
       </View>
       <View style={$transactionValue}>
         <Text style={[$transactionAmount, $transactionAmountMinus]}>-345,00</Text>
-        <Text style={$transactionCurrency}>EUR</Text>
+        <TextThemed style={$transactionCurrency} variant="secondary">
+          EUR
+        </TextThemed>
       </View>
     </View>
   )
@@ -60,14 +65,12 @@ const $transactionValue: ViewStyle = {
 }
 
 const $transactionTitle: TextStyle = {
-  color: "#16110D",
   fontFamily: typography.primary.semiBold,
   fontSize: 12,
   lineHeight: 15,
 }
 const $transactionDateTime: TextStyle = {
   marginTop: 2,
-  color: "#C4C4C4",
   fontFamily: typography.primary.semiBold,
   fontSize: 11,
   lineHeight: 13,
@@ -86,7 +89,6 @@ const $transactionAmountMinus: TextStyle = {
 }
 const $transactionCurrency: TextStyle = {
   marginTop: 2,
-  color: "#C4C4C4",
   fontFamily: typography.primary.semiBold,
   fontSize: 11,
   lineHeight: 13,

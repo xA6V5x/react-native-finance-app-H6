@@ -1,11 +1,19 @@
 import * as React from "react"
-import { StyleProp, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
+import {
+  StyleProp,
+  TextStyle,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+  ViewStyle,
+} from "react-native"
 import { observer } from "mobx-react-lite"
 import { typography } from "../../theme"
 import { Text } from "../../components/Text"
 import { TransactionListItem } from "../../components/TransactionListItem"
-import { Icon } from "../../components"
+import { Icon, TextThemed, ViewThemed } from "../../components"
 import { useAccountHistoryNavigation } from "../../navigators"
+import { useColorSchemeStyle } from "../../theme/useColorSchemeStyle"
 
 export interface RecentTransactionsViewProps {
   /**
@@ -25,10 +33,15 @@ export const RecentTransactionsView = observer(function RecentTransactionsView(
   const navigation = useAccountHistoryNavigation()
   const openTransactionList = () => navigation.navigate("TransactionList")
 
+  const $transactionsListItemDividerStyle = useColorSchemeStyle({
+    light: $transactionsListItemDivider,
+    dark: [$transactionsListItemDivider, $transactionsListItemDividerDark],
+  })
+
   return (
-    <View style={$styles}>
+    <ViewThemed style={$styles}>
       <View style={$transactionsHeader}>
-        <Text style={$transactionsHeaderText}>Recent transactions</Text>
+        <TextThemed style={$transactionsHeaderText}>Recent transactions</TextThemed>
         <TouchableOpacity style={$transactionsFilterButton} onPress={openTransactionList}>
           <Icon size={18} color="white" icon="filter" />
         </TouchableOpacity>
@@ -40,17 +53,16 @@ export const RecentTransactionsView = observer(function RecentTransactionsView(
           return (
             <React.Fragment key={transaction.id}>
               <TransactionListItem />
-              {!isLastItem && <View style={$transactionsListItemDivider} />}
+              {!isLastItem && <View style={$transactionsListItemDividerStyle} />}
             </React.Fragment>
           )
         })}
       </View>
-    </View>
+    </ViewThemed>
   )
 })
 
 const $container: ViewStyle = {
-  backgroundColor: "white",
   borderRadius: 25,
   paddingHorizontal: 22,
   paddingTop: 20,
@@ -62,7 +74,6 @@ const $transactionsHeader: ViewStyle = {
   alignItems: "center",
 }
 const $transactionsHeaderText: TextStyle = {
-  color: "#16110D",
   fontFamily: typography.primary.semiBold,
   fontSize: 17,
   lineHeight: 21,
@@ -89,4 +100,7 @@ const $transactionsListItemDivider: ViewStyle = {
   marginBottom: 15,
   height: 1,
   backgroundColor: "#DCDCDC",
+}
+const $transactionsListItemDividerDark: ViewStyle = {
+  backgroundColor: "#646464",
 }
