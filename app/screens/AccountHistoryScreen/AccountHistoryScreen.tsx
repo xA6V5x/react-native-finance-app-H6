@@ -4,10 +4,17 @@ import { ViewStyle } from "react-native"
 import { Screen } from "../../components"
 import { AccountCardList } from "./AccountCardList"
 import { RecentTransactionsView } from "./RecentTransactionsView"
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs"
 
 export const AccountHistoryScreen = observer(function AccountHistoryScreen() {
+  const bottomTabBarHeight = useBottomTabBarHeight()
+
   return (
-    <Screen style={$root} preset="scroll">
+    <Screen
+      style={$root}
+      preset="scroll"
+      contentContainerStyle={{ paddingBottom: bottomTabBarHeight }}
+    >
       <AccountCardList style={$accountCardList} />
       <RecentTransactionsView style={$recentTransactions} />
     </Screen>
