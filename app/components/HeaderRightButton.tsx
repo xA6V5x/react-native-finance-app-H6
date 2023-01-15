@@ -7,10 +7,10 @@ export interface HeaderRightButtonProps extends TouchableOpacityProps {}
 export const HeaderRightButton = observer(function HeaderRightButton(
   props: HeaderRightButtonProps,
 ) {
-  const { style } = props
+  const { style, ...otherProps } = props
   const $styles = [$container, style]
 
-  return <TouchableOpacity style={$styles} />
+  return <TouchableOpacity style={$styles} {...otherProps} />
 })
 
 const $container: ViewStyle = {
