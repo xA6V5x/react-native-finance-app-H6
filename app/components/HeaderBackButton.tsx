@@ -15,9 +15,13 @@ export const HeaderBackButton = observer(function HeaderBackButton(props: Header
 
   const navigation = useNavigation()
 
+  if (!canGoBack) {
+    return null
+  }
+
   return (
     <TouchableOpacity style={$styles}>
-      <Icon icon="back" size={20} color="white" onPress={canGoBack ? navigation.goBack : null} />
+      <Icon icon="back" size={16} color="white" onPress={navigation.goBack} />
     </TouchableOpacity>
   )
 })
