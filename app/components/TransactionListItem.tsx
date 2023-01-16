@@ -3,39 +3,67 @@ import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { typography } from "../theme"
 import { Text } from "./Text"
-import { Icon } from "./Icon"
+import { Icon, IconTypes } from "./Icon"
 import { TextThemed } from "./TextThemed"
+import { TransactionDTO } from "../services/api"
+import { formatMoney } from "../utils/formatMoney"
 
 export interface TransactionListItemProps {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
+  transaction: TransactionDTO
+}
+
+const getTransactionIconType = (transaction: TransactionDTO): IconTypes => {
+  switch (transaction.type) {
+    case "auto":
+      return "transactionAuto"
+    case "food":
+      return "transactionFood"
+    case "house":
+      return "transactionHouse"
+    case "transfer":
+      return "transactionTransfer"
+    case "travel":
+      return "transactionTravel"
+  }
 }
 
 export const TransactionListItem = observer(function TransactionListItem(
   props: TransactionListItemProps,
 ) {
-  const { style } = props
+  const { style, transaction } = props
   const $styles = [$transaction, style]
+
+  const iconType = getTransactionIconType(transaction)
 
   return (
     <View style={$styles}>
       <View style={$transactionType}>
-        <Icon icon="transactionAuto" size={18} color="white" />
+        <Icon icon={iconType} size={18} color="white" />
       </View>
       <View style={$transactionSummary}>
         <TextThemed style={$transactionTitle} numberOfLines={1}>
-          "Golub" Taxi Transportation
+          {transaction.targetName}
         </TextThemed>
         <TextThemed style={$transactionDateTime} variant="secondary">
-          20th May, 18:39
+          {transaction.dateTime}
         </TextThemed>
       </View>
       <View style={$transactionValue}>
-        <Text style={[$transactionAmount, $transactionAmountMinus]}>-345,00</Text>
+        <Text
+          style={[
+            $transactionAmount,
+            transaction.amount > 0 ? $transactionAmountPlus : $transactionAmountMinus,
+          ]}
+        >
+          {`${transaction.amount > 0 ? "+" : ""}`}
+          {formatMoney(transaction.amount)}
+        </Text>
         <TextThemed style={$transactionCurrency} variant="secondary">
-          EUR
+          {transaction.currency.name}
         </TextThemed>
       </View>
     </View>

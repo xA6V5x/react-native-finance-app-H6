@@ -5,14 +5,9 @@
  * See the [Backend API Integration](https://github.com/infinitered/ignite/blob/master/docs/Backend-API-Integration.md)
  * documentation for more details.
  */
-import {
-  ApisauceInstance,
-  create,
-} from "apisauce"
+import { ApisauceInstance, create } from "apisauce"
 import Config from "../../config"
-import type {
-  ApiConfig,
-} from "./api.types"
+import type { AccountDTO, ApiConfig, TransactionDTO } from "./api.types"
 
 /**
  * Configuring the apisauce instance.
@@ -44,6 +39,13 @@ export class Api {
     })
   }
 
+  getAccounts() {
+    return this.apisauce.get<AccountDTO[]>("/accounts")
+  }
+
+  getTransactions(accountId: number) {
+    return this.apisauce.get<TransactionDTO[]>(`/accounts/${accountId}/transactions`)
+  }
 }
 
 // Singleton instance of the API for convenience

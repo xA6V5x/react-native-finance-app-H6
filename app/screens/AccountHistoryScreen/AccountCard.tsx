@@ -5,24 +5,26 @@ import { typography } from "../../theme"
 import { Icon } from "../../components/Icon"
 import { $textPrimaryLight, TextThemed, ViewThemed } from "../../components"
 import { useColorSchemeStyle } from "../../theme/useColorSchemeStyle"
+import { AccountDTO } from "../../services/api"
+import { formatMoney } from "../../utils/formatMoney"
 
 export interface AccountCardProps {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
+  account: AccountDTO
 }
 
 /**
  * Describe your component here
  */
 export const AccountCard = observer(function AccountCard(props: AccountCardProps) {
-  const { style } = props
+  const { style, account } = props
 
   const $styles = [$container, style]
 
-  const currencies = ["EUR", "USD", "GBR"]
-  const [activeCurrency, setActiveCurrency] = React.useState(currencies[0])
+  const [activeBalance, setActiveBalance] = React.useState(account.balances[0])
 
   const $accountNumberStyle = useColorSchemeStyle({
     light: [$accountNumber, $textPrimaryLight],
@@ -37,9 +39,9 @@ export const AccountCard = observer(function AccountCard(props: AccountCardProps
     <ViewThemed style={$styles}>
       <View style={$accountSummary}>
         <View style={$accountSummaryLeft}>
-          <TextThemed style={$accountName}>Current Account</TextThemed>
+          <TextThemed style={$accountName}>{account.name}</TextThemed>
           <TextThemed style={$accountNumberStyle} variant="secondary">
-            1234-4567-3456-3456
+            {account.number}
           </TextThemed>
         </View>
         <View style={$accountSummaryRight}>
@@ -50,26 +52,26 @@ export const AccountCard = observer(function AccountCard(props: AccountCardProps
       </View>
 
       <ScrollView style={[$accountCurrencySwitcher, $currencyList]} horizontal>
-        {currencies.map((currency) => (
+        {account.balances.map((balance) => (
           <Pressable
-            key={currency}
-            style={[$currency, activeCurrency === currency ? $currencyActive : null]}
-            onPress={() => setActiveCurrency(currency)}
+            key={balance.currency.id}
+            style={[$currency, activeBalance === balance ? $currencyActive : null]}
+            onPress={() => setActiveBalance(balance)}
           >
             <TextThemed
               variant="secondary"
               style={[
                 $currencyLabelStyle,
-                activeCurrency === currency ? $currencyLabelActive : null,
+                balance === activeBalance ? $currencyLabelActive : null,
               ].flat()}
             >
-              {currency}
+              {balance.currency.name}
             </TextThemed>
           </Pressable>
         ))}
       </ScrollView>
 
-      <TextThemed style={$accountBalance}>76.451,00</TextThemed>
+      <TextThemed style={$accountBalance}>{formatMoney(activeBalance.amount)}</TextThemed>
       <TextThemed style={$accountBalanceLabel}>Current balance</TextThemed>
     </ViewThemed>
   )

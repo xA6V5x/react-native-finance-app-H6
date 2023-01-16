@@ -3,28 +3,29 @@ import { ListRenderItem, StyleProp, useWindowDimensions, View, ViewStyle } from 
 import { observer } from "mobx-react-lite"
 import { FlatList } from "react-native-gesture-handler"
 import { AccountCard } from "./AccountCard"
+import { AccountDTO } from "../../services/api"
 
 export interface AccountCardListProps {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
+  accounts: AccountDTO[]
+  activeAccount: AccountDTO
+  onChangeActiveAccount: (activeAccount: AccountDTO) => void
 }
 
 /**
  * Describe your component here
  */
 export const AccountCardList = observer(function AccountCardList(props: AccountCardListProps) {
-  const { style } = props
+  const { style, accounts, activeAccount, onChangeActiveAccount } = props
   const $styles = [$container, style]
-  const accounts = React.useMemo(() => [...new Array(4)].map((_, index) => ({ id: index })), [])
-
-  const [activeAccountIndex, setActiveAccountIndex] = React.useState(0)
 
   const { width: windowWidth } = useWindowDimensions()
   const CARD_WIDTH = windowWidth - CARD_MARGIN_HORIZONTAL * 4 - CARD_OFFSET_HORIZONTAL * 2
 
-  const renderAccount: ListRenderItem<{ id: number }> = React.useCallback(({ index }) => {
+  const renderAccount: ListRenderItem<AccountDTO> = React.useCallback(({ item, index }) => {
     const isFirstItem = index === 0
     const isLastItem = index === accounts.length - 1
 
@@ -36,6 +37,7 @@ export const AccountCardList = observer(function AccountCardList(props: AccountC
           isFirstItem ? $cardFirst : null,
           isLastItem ? $cardLast : null,
         ]}
+        account={item}
       />
     )
   }, [])
@@ -55,7 +57,7 @@ export const AccountCardList = observer(function AccountCardList(props: AccountC
   const onViewChanged = React.useRef(({ viewableItems }) => {
     if (viewableItems.length > 0) {
       const { index } = viewableItems[0]
-      setActiveAccountIndex(index)
+      onChangeActiveAccount(accounts[index])
     }
   })
 
@@ -64,10 +66,10 @@ export const AccountCardList = observer(function AccountCardList(props: AccountC
   return (
     <View style={$styles}>
       <View style={$dotList}>
-        {accounts.map((_, index) => (
+        {accounts.map((item) => (
           <View
-            key={index.toString()}
-            style={[$dot, index === activeAccountIndex ? $dotActive : null]}
+            key={activeAccount.id.toString()}
+            style={[$dot, item === activeAccount ? $dotActive : null]}
           />
         ))}
       </View>

@@ -6,21 +6,21 @@ import { TransactionListItem } from "../../components/TransactionListItem"
 import { Icon, TextThemed, ViewThemed } from "../../components"
 import { useAppStackNavigation } from "../../navigators"
 import { useColorSchemeStyle } from "../../theme/useColorSchemeStyle"
+import { TransactionDTO } from "../../services/api"
 
 export interface RecentTransactionsViewProps {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
+  transactions: TransactionDTO[]
 }
 
 export const RecentTransactionsView = observer(function RecentTransactionsView(
   props: RecentTransactionsViewProps,
 ) {
-  const { style } = props
+  const { style, transactions } = props
   const $styles = [$container, style]
-
-  const transactions = [...new Array(5)].map((_, index) => ({ id: index }))
 
   const navigation = useAppStackNavigation()
   const openTransactionList = () => navigation.navigate("TransactionList")
@@ -44,7 +44,7 @@ export const RecentTransactionsView = observer(function RecentTransactionsView(
 
           return (
             <React.Fragment key={transaction.id}>
-              <TransactionListItem />
+              <TransactionListItem transaction={transaction} />
               {!isLastItem && <View style={$transactionsListItemDividerStyle} />}
             </React.Fragment>
           )
