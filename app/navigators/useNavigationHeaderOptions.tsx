@@ -4,7 +4,18 @@ import { HeaderBackButton } from "../components"
 import { typography } from "../theme"
 import { useColorScheme } from "react-native"
 
-export const useNativeStackNavigationOptions = (): NativeStackNavigationOptions => {
+type NavigationHeaderOptions = Pick<
+  NativeStackNavigationOptions,
+  | "statusBarColor"
+  | "headerTitleStyle"
+  | "headerTitleAlign"
+  | "headerStyle"
+  | "headerShadowVisible"
+  | "headerBackTitleVisible"
+  | "headerLeft"
+>
+
+export const useNavigationHeaderOptions = (): NavigationHeaderOptions => {
   const colorScheme = useColorScheme()
 
   const backgroundColor = colorScheme === "light" ? "#523CF8" : "#16110D"

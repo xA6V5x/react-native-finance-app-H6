@@ -1,18 +1,10 @@
 import * as React from "react"
-import {
-  StyleProp,
-  TextStyle,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-  ViewStyle,
-} from "react-native"
+import { StyleProp, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { typography } from "../../theme"
-import { Text } from "../../components/Text"
 import { TransactionListItem } from "../../components/TransactionListItem"
 import { Icon, TextThemed, ViewThemed } from "../../components"
-import { useAccountHistoryNavigation } from "../../navigators"
+import { useAppStackNavigation } from "../../navigators"
 import { useColorSchemeStyle } from "../../theme/useColorSchemeStyle"
 
 export interface RecentTransactionsViewProps {
@@ -30,7 +22,7 @@ export const RecentTransactionsView = observer(function RecentTransactionsView(
 
   const transactions = [...new Array(5)].map((_, index) => ({ id: index }))
 
-  const navigation = useAccountHistoryNavigation()
+  const navigation = useAppStackNavigation()
   const openTransactionList = () => navigation.navigate("TransactionList")
 
   const $transactionsListItemDividerStyle = useColorSchemeStyle({
