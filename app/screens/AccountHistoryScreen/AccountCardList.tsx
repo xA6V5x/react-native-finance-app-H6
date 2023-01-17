@@ -4,6 +4,7 @@ import { observer } from "mobx-react-lite"
 import { FlatList } from "react-native-gesture-handler"
 import { AccountCard } from "./AccountCard"
 import { AccountDTO } from "../../services/api"
+import { Dot } from "./Dot"
 
 export interface AccountCardListProps {
   /**
@@ -66,11 +67,8 @@ export const AccountCardList = observer(function AccountCardList(props: AccountC
   return (
     <View style={$styles}>
       <View style={$dotList}>
-        {accounts.map((item) => (
-          <View
-            key={activeAccount.id.toString()}
-            style={[$dot, item === activeAccount ? $dotActive : null]}
-          />
+        {accounts.map((account) => (
+          <Dot key={account.id.toString()} isActive={account === activeAccount} />
         ))}
       </View>
       <FlatList
@@ -115,21 +113,4 @@ const $cardLast: ViewStyle = {
 const $dotList: ViewStyle = {
   flexDirection: "row",
   justifyContent: "center",
-}
-const $dot: ViewStyle = {
-  marginHorizontal: 6,
-  width: 6,
-  height: 6,
-  borderRadius: 3,
-  backgroundColor: "white",
-}
-const $dotActive: ViewStyle = {
-  transform: [
-    {
-      scale: 2,
-    },
-  ],
-  borderWidth: 1,
-  borderColor: "white",
-  backgroundColor: "transparent",
 }
