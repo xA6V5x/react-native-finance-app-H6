@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { ViewStyle } from "react-native"
+import { RefreshControl, ViewStyle } from "react-native"
 import { Screen } from "../../components"
 import { AccountCardList } from "./AccountCardList"
 import { RecentTransactionsView } from "./RecentTransactionsView"
@@ -18,41 +18,65 @@ export const AccountHistoryScreen = observer(function AccountHistoryScreen() {
   const bottomTabBarHeight = useBottomTabBarHeight()
 
   const [accounts, setAccounts] = useState<AccountDTO[]>()
-  const [activeAccount, setActiveAccount] = useState<AccountDTO>()
+  const [activeAccountId, setActiveAccountId] = useState<AccountDTO["id"]>()
   const [transactions, setTransactions] = useState<TransactionDTO[]>()
 
+  const [isRefreshing, setIsRefreshing] = useState(false)
+
   useEffect(() => {
-    api.getAccounts().then(({ data }) => {
-      setAccounts(data)
-      setActiveAccount(data[0])
-    })
+    fetchAccounts()
   }, [])
 
   useEffect(() => {
-    if (activeAccount) {
+    if (activeAccountId) {
       setTransactions(undefined)
-      api.getTransactions(activeAccount.id).then(({ data }) => {
-        setTransactions(data)
-      })
+      fetchTransactions(activeAccountId)
     }
-  }, [activeAccount])
+  }, [activeAccountId])
+
+  const fetchAccounts = async () => {
+    const { data } = await api.getAccounts()
+    setAccounts(data)
+  }
+
+  const fetchTransactions = async (accountId: AccountDTO["id"]) => {
+    const { data } = await api.getTransactions(accountId)
+    setTransactions(data)
+  }
+
+  const refreshData = async () => {
+    setIsRefreshing(true)
+    await Promise.all([fetchAccounts(), fetchTransactions(activeAccountId)])
+    setIsRefreshing(false)
+  }
 
   return (
     <Screen
       style={$styles}
       preset="scroll"
       contentContainerStyle={{ paddingBottom: bottomTabBarHeight }}
+      ScrollViewProps={{
+        overScrollMode: "always",
+        refreshControl: (
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={refreshData}
+            tintColor="white"
+            colors={["#523CF8"]}
+          />
+        ),
+      }}
     >
       {accounts && (
         <AccountCardList
           style={$accountCardList}
           accounts={accounts}
-          activeAccount={activeAccount}
-          onChangeActiveAccount={setActiveAccount}
+          activeAccountId={activeAccountId}
+          onChangeActiveAccountId={setActiveAccountId}
         />
       )}
       {transactions && (
-        <RecentTransactionsView style={$recentTransactions} transactions={transactions} />
+          <RecentTransactionsView style={$recentTransactions} transactions={transactions} />
       )}
     </Screen>
   )

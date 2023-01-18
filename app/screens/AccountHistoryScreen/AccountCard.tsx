@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { Pressable, StyleProp, TextStyle, View, ViewStyle, ScrollView } from "react-native"
 import { observer } from "mobx-react-lite"
 import { typography } from "../../theme"
@@ -30,7 +30,11 @@ export const AccountCard = observer(function AccountCard(props: AccountCardProps
 
   const $styles = [$container, style]
 
-  const [activeBalance, setActiveBalance] = React.useState(account.balances[0])
+  const [activeBalance, setActiveBalance] = useState(account.balances[0])
+
+  useEffect(() => {
+    setActiveBalance(account.balances[0])
+  }, [account])
 
   const $accountNumberStyle = useColorSchemeStyle({
     light: [$accountNumber, $textPrimaryLight],

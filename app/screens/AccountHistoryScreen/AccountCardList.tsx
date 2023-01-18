@@ -12,15 +12,15 @@ export interface AccountCardListProps {
    */
   style?: StyleProp<ViewStyle>
   accounts: AccountDTO[]
-  activeAccount: AccountDTO
-  onChangeActiveAccount: (activeAccount: AccountDTO) => void
+  activeAccountId: AccountDTO["id"]
+  onChangeActiveAccountId: (accountId: AccountDTO["id"]) => void
 }
 
 /**
  * Describe your component here
  */
 export const AccountCardList = observer(function AccountCardList(props: AccountCardListProps) {
-  const { style, accounts, activeAccount, onChangeActiveAccount } = props
+  const { style, accounts, activeAccountId, onChangeActiveAccountId } = props
   const $styles = [$container, style]
 
   const { width: windowWidth } = useWindowDimensions()
@@ -58,7 +58,7 @@ export const AccountCardList = observer(function AccountCardList(props: AccountC
   const onViewChanged = React.useRef(({ viewableItems }) => {
     if (viewableItems.length > 0) {
       const { index } = viewableItems[0]
-      onChangeActiveAccount(accounts[index])
+      onChangeActiveAccountId(accounts[index].id)
     }
   })
 
@@ -68,7 +68,7 @@ export const AccountCardList = observer(function AccountCardList(props: AccountC
     <View style={$styles}>
       <View style={$dotList}>
         {accounts.map((account) => (
-          <Dot key={account.id.toString()} isActive={account === activeAccount} />
+          <Dot key={account.id.toString()} isActive={account.id === activeAccountId} />
         ))}
       </View>
       <FlatList
