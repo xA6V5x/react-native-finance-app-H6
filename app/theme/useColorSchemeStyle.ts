@@ -1,8 +1,10 @@
 import { StyleProp, useColorScheme } from "react-native"
 
-type ColorSchemeName = ReturnType<typeof useColorScheme>
+type ColorSchemeName = "dark" | "light"
 
-export const useColorSchemeStyle = <T>(styles: { [key in ColorSchemeName]: StyleProp<T> }) => {
+export const useColorSchemeStyle = <T>(styles: {
+  [key in ColorSchemeName]: StyleProp<T> | undefined
+}) => {
   const colorTheme = useColorScheme()
-  return styles[colorTheme]
+  return colorTheme ? styles[colorTheme] : undefined
 }

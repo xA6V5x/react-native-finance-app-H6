@@ -28,6 +28,12 @@ export const AccountHistoryScreen = observer(function AccountHistoryScreen() {
   }, [])
 
   useEffect(() => {
+    if (!activeAccountId && accounts && accounts.length > 0) {
+      setActiveAccountId(accounts[0].id)
+    }
+  }, [accounts])
+
+  useEffect(() => {
     if (activeAccountId) {
       setTransactions(undefined)
       fetchTransactions(activeAccountId)
@@ -46,7 +52,7 @@ export const AccountHistoryScreen = observer(function AccountHistoryScreen() {
 
   const refreshData = async () => {
     setIsRefreshing(true)
-    await Promise.all([fetchAccounts(), fetchTransactions(activeAccountId)])
+    await Promise.all([fetchAccounts(), activeAccountId && fetchTransactions(activeAccountId)])
     setIsRefreshing(false)
   }
 
@@ -67,7 +73,7 @@ export const AccountHistoryScreen = observer(function AccountHistoryScreen() {
         ),
       }}
     >
-      {accounts && (
+      {accounts && activeAccountId && (
         <AccountCardList
           style={$accountCardList}
           accounts={accounts}
@@ -75,8 +81,12 @@ export const AccountHistoryScreen = observer(function AccountHistoryScreen() {
           onChangeActiveAccountId={setActiveAccountId}
         />
       )}
-      {transactions && (
-          <RecentTransactionsView style={$recentTransactions} transactions={transactions} />
+      {transactions && activeAccountId && (
+        <RecentTransactionsView
+          style={$recentTransactions}
+          accountId={activeAccountId}
+          transactions={transactions}
+        />
       )}
     </Screen>
   )

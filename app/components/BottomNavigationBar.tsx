@@ -25,7 +25,7 @@ export const BottomNavigationBar = observer(function BottomNavigationBar(
         {state.routes.map((route, index) => {
           const { options } = descriptors[route.key]
           const isFocused = state.index === index
-          const icon = options.tabBarIcon({ focused: isFocused, color: "", size: 0 })
+          const icon = options.tabBarIcon?.({ focused: isFocused, color: "", size: 0 })
 
           const onPress = () => {
             const event = navigation.emit({

@@ -22,7 +22,7 @@ export const TextThemed = observer(function TextThemed(props: TextThemedProps) {
     },
   } as const
 
-  const $styles = [styles[variant][colorScheme], style]
+  const $styles = [colorScheme ? styles[variant][colorScheme] : null, style]
 
   return <Text style={$styles} {...otherProps} />
 })
