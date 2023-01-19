@@ -31,9 +31,7 @@ const getTransactionIconType = (transaction: TransactionDTO): IconTypes => {
   }
 }
 
-export const TransactionListItem = observer(function TransactionListItem(
-  props: TransactionListItemProps,
-) {
+export function TransactionListItem(props: TransactionListItemProps) {
   const { style, transaction } = props
   const $styles = [$transaction, style]
 
@@ -68,7 +66,7 @@ export const TransactionListItem = observer(function TransactionListItem(
       </View>
     </View>
   )
-})
+}
 
 const $transaction: ViewStyle = {
   flexDirection: "row",

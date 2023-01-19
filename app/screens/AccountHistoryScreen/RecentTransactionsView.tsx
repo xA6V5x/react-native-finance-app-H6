@@ -6,24 +6,25 @@ import { TransactionListItem } from "../../components/TransactionListItem"
 import { Icon, TextThemed, ViewThemed } from "../../components"
 import { useAppStackNavigation } from "../../navigators"
 import { useColorSchemeStyle } from "../../theme/useColorSchemeStyle"
-import { TransactionDTO } from "../../services/api"
+import { AccountDTO, TransactionDTO } from "../../services/api"
 
 export interface RecentTransactionsViewProps {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
+  accountId: AccountDTO["id"]
   transactions: TransactionDTO[]
 }
 
 export const RecentTransactionsView = observer(function RecentTransactionsView(
   props: RecentTransactionsViewProps,
 ) {
-  const { style, transactions } = props
+  const { style, transactions, accountId } = props
   const $styles = [$container, style]
 
   const navigation = useAppStackNavigation()
-  const openTransactionList = () => navigation.navigate("TransactionList")
+  const openTransactionList = () => navigation.navigate("TransactionList", { accountId })
 
   const $transactionsListItemDividerStyle = useColorSchemeStyle({
     light: $transactionsListItemDivider,

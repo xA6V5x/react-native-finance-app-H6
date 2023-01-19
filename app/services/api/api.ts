@@ -43,8 +43,8 @@ export class Api {
     return this.apisauce.get<AccountDTO[]>("/accounts")
   }
 
-  getTransactions(accountId: number) {
-    return this.apisauce.get<TransactionDTO[]>(`/accounts/${accountId}/transactions`)
+  getTransactions(accountId: number, params: { offset?: number; size?: number } = {}) {
+    return this.apisauce.get<TransactionDTO[]>(`/accounts/${accountId}/transactions`, params)
   }
 }
 

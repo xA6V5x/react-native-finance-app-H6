@@ -1,4 +1,5 @@
 import MockAdapter from "axios-mock-adapter"
+import { add, formatISO } from "date-fns"
 import { api } from "./api"
 import { AccountDTO, TransactionDTO } from "./api.types"
 
@@ -81,56 +82,60 @@ mock.onGet("/accounts").reply<AccountDTO[]>(200, [
   },
 ])
 
-let accountTransactionsCounters = {
-  [1]: 1,
-  [2]: 1,
-  [3]: 1,
-}
+const transactionTemplates = [
+  {
+    id: 1,
+    type: "auto",
+    targetName: '"Golub" Taxi Transportation',
+    dateTime: "2022-05-22T18:39:00.000Z",
+    amount: -345,
+    currency: currencyEur,
+  },
+  {
+    id: 2,
+    type: "food",
+    targetName: '"Francois" Restaurant Dinner',
+    dateTime: "2022-05-15T20:56:00.000Z",
+    amount: -1158,
+    currency: currencyEur,
+  },
+  {
+    id: 3,
+    type: "travel",
+    targetName: '"AirMax" Travel to Paris',
+    dateTime: "2022-05-14T16:00:00.000Z",
+    amount: -813,
+    currency: currencyEur,
+  },
+  {
+    id: 4,
+    type: "house",
+    targetName: "Construction ltd.",
+    dateTime: "2022-05-11T09:26:00.000Z",
+    amount: 24500,
+    currency: currencyUsd,
+  },
+  {
+    id: 5,
+    type: "transfer",
+    targetName: "Robert Smith",
+    dateTime: "2022-05-03T12:06:00.000Z",
+    amount: 11215,
+    currency: currencyUsd,
+  },
+]
 mock.onGet(/\/accounts\/\d+\/transactions/).reply<TransactionDTO[]>((config) => {
-  const [, id] = config.url.match(/\/accounts\/(\d+)\/transactions/)
-
-  const transactions = [
-    {
-      id: 1,
-      type: "auto",
-      targetName: '"Golub" Taxi Transportation',
-      dateTime: "2022-05-22T18:39:00.000Z",
-      amount: -345,
-      currency: currencyEur,
-    },
-    {
-      id: 2,
-      type: "food",
-      targetName: '"Francois" Restaurant Dinner',
-      dateTime: "2022-05-15T20:56:00.000Z",
-      amount: -1158,
-      currency: currencyEur,
-    },
-    {
-      id: 3,
-      type: "travel",
-      targetName: '"AirMax" Travel to Paris',
-      dateTime: "2022-05-14T16:00:00.000Z",
-      amount: -813,
-      currency: currencyEur,
-    },
-    {
-      id: 4,
-      type: "house",
-      targetName: "Construction ltd.",
-      dateTime: "2022-05-11T09:26:00.000Z",
-      amount: 24500,
-      currency: currencyUsd,
-    },
-    {
-      id: 5,
-      type: "transfer",
-      targetName: "Robert Smith",
-      dateTime: "2022-05-03T12:06:00.000Z",
-      amount: 11215,
-      currency: currencyUsd,
-    },
-  ]
-
-  return [200, transactions.slice(-accountTransactionsCounters[id]++)]
+  const { size = 50, offset = 0 } = config.params ?? {}
+  const now = new Date()
+  try {
+    const transactions = [...new Array(size)].map((_, index) => ({
+      ...transactionTemplates[index % transactionTemplates.length],
+      id: offset + index,
+      dateTime: formatISO(add(now, { days: -(offset - index) })),
+    }))
+    return [200, transactions]
+  } catch (e) {
+    console.log(e)
+  }
+  return [200, []]
 })

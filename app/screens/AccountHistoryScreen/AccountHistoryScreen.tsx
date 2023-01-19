@@ -46,7 +46,7 @@ export const AccountHistoryScreen = observer(function AccountHistoryScreen() {
   }
 
   const fetchTransactions = async (accountId: AccountDTO["id"]) => {
-    const { data } = await api.getTransactions(accountId)
+    const { data } = await api.getTransactions(accountId, { size: 5 })
     setTransactions(data)
   }
 
