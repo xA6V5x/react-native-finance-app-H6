@@ -4,7 +4,7 @@ import { FlatList, TextStyle, View, ViewStyle, ListRenderItem } from "react-nati
 import { AppStackScreenProps } from "../navigators"
 import { Screen, TextThemed } from "../components"
 import { AccountDTO, api, TransactionDTO } from "../services/api"
-import { TransactionListItem } from "../components/TransactionListItem"
+import TransactionListItem from "../components/TransactionListItem"
 import { format } from "date-fns"
 import { typography } from "../theme"
 import { useColorSchemeStyle } from "../theme/useColorSchemeStyle"

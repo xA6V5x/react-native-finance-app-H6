@@ -2,16 +2,13 @@ import * as React from "react"
 import { StyleProp, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { typography } from "../../theme"
-import { TransactionListItem } from "../../components/TransactionListItem"
+import TransactionListItem from "../../components/TransactionListItem"
 import { Icon, TextThemed, ViewThemed } from "../../components"
 import { useAppStackNavigation } from "../../navigators"
 import { useColorSchemeStyle } from "../../theme/useColorSchemeStyle"
 import { AccountDTO, TransactionDTO } from "../../services/api"
 
 export interface RecentTransactionsViewProps {
-  /**
-   * An optional style override useful for padding & margin.
-   */
   style?: StyleProp<ViewStyle>
   accountId: AccountDTO["id"]
   transactions: TransactionDTO[]
