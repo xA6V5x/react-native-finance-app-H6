@@ -1,39 +1,34 @@
-import React, { FC } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { FlatList, ListRenderItem, TextStyle, View, ViewStyle } from "react-native"
-import { StackScreenProps } from "@react-navigation/stack"
+import { FlatList, TextStyle, View, ViewStyle, ListRenderItem } from "react-native"
 import { AppStackScreenProps } from "../navigators"
-import { Screen, Text, TextThemed } from "../components"
+import { Screen, TextThemed } from "../components"
 import { AccountDTO, api, TransactionDTO } from "../services/api"
-import { useState } from "react"
-import { useEffect } from "react"
 import { TransactionListItem } from "../components/TransactionListItem"
-import { useLayoutEffect } from "react"
 import { format } from "date-fns"
 import { typography } from "../theme"
 import { useColorSchemeStyle } from "../theme/useColorSchemeStyle"
 
-type TransactionListItem =
+type TransactionListItemProps =
   | { type: "month"; payload: string }
   | { type: "transaction"; payload: TransactionDTO }
 
 export const TransactionListScreen: FC<AppStackScreenProps<"TransactionList">> = observer(
   function TransactionListScreen(props) {
-    // Pull in one of our MST stores
-    // const { someStore, anotherStore } = useStores()
-
-    // Pull in navigation via hook
     const { route } = props
 
     const [transactions, setTransactions] = useState<TransactionDTO[]>([])
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const fetchTransactions = async (accountId: AccountDTO["id"]) => {
+      setIsLoading(true)
       const { data = [] } = await api.getTransactions(accountId, {
         offset: transactions.length,
         size: 50,
       })
 
       setTransactions([...transactions, ...data])
+      setIsLoading(false)
     }
 
     useEffect(() => {
@@ -41,7 +36,7 @@ export const TransactionListScreen: FC<AppStackScreenProps<"TransactionList">> =
     }, [route.params.accountId])
 
     let currentMonth: string
-    const data = transactions?.reduce<TransactionListItem[]>((result, item) => {
+    const data = transactions?.reduce<TransactionListItemProps[]>((result, item) => {
       const transactionMonth = format(new Date(item.dateTime), "MMMM, yyyy")
       if (result.length === 0 || transactionMonth !== currentMonth) {
         currentMonth = transactionMonth
@@ -56,25 +51,31 @@ export const TransactionListScreen: FC<AppStackScreenProps<"TransactionList">> =
       dark: $containerDark,
     })
 
+    const renderItem: ListRenderItem<TransactionListItemProps> = ({ item: transaction }) => {
+      if (transaction.type === "month") {
+        return (
+          <View style={$transactionsListSection}>
+            <TextThemed style={$transactionsListSectionHeader}>{transaction.payload}</TextThemed>
+          </View>
+        )
+      }
+      return <TransactionListItem style={$transactionsListItem} transaction={transaction.payload} />
+    }
+
     return (
       <Screen contentContainerStyle={[$container, $containerThemed]}>
         <FlatList
           style={$transactionsList}
           data={data || []}
-          renderItem={({ item }) => {
-            if (item.type === "month") {
-              return (
-                <View style={$transactionsListSection}>
-                  <TextThemed style={$transactionsListSectionHeader}>{item.payload}</TextThemed>
-                </View>
-              )
-            }
-            return <TransactionListItem style={$transactionsListItem} transaction={item.payload} />
-          }}
+          renderItem={renderItem}
           onEndReached={() => {
             console.log("onEndReached")
             fetchTransactions(route.params.accountId)
           }}
+          keyExtractor={(item, index) => String(index)}
+          initialNumToRender={15}
+          maxToRenderPerBatch={50}
+          refreshing={isLoading}
         />
       </Screen>
     )

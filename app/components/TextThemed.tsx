@@ -5,6 +5,7 @@ import { Text } from "./Text"
 
 export interface TextThemedProps extends TextProps {
   variant?: "primary" | "secondary"
+  style?: object
 }
 
 export const TextThemed = observer(function TextThemed(props: TextThemedProps) {
