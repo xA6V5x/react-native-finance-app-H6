@@ -1,6 +1,5 @@
 import * as React from "react"
 import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
-import { observer } from "mobx-react-lite"
 import { typography } from "../theme"
 import { Text } from "./Text"
 import { Icon, IconTypes } from "./Icon"
@@ -9,9 +8,6 @@ import { TransactionDTO } from "../services/api"
 import { formatMoney } from "../utils/formatMoney"
 
 export interface TransactionListItemProps {
-  /**
-   * An optional style override useful for padding & margin.
-   */
   style?: StyleProp<ViewStyle>
   transaction: TransactionDTO
 }
